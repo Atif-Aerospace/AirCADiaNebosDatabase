@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'aircadia'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_06EA3DA373904A4EB46795FFAB8B64DB }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_612CFC67FE6E4E1589254BCDB5E57A42 }}
