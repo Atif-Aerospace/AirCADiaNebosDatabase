@@ -61,10 +61,17 @@
     <div id="myDiagramDiv" style="width:1500px; height:850px; background-color: #DAE4E4;"></div>
 
     <script>
+        //var AirCADiaProjectsURI = "http://127.0.0.1:3000/get-projects";
+        var AirCADiaProjectsURI = "http://aircadia.azurewebsites.net/get-projects";
+
+        //var AirCADiaURI = 'http://127.0.0.1:3001';
+        var AirCADiaURI = 'http://aircadia.azurewebsites.net';
+    </script>
+    <script>
         var socket;
         $(document).ready(function() {
 
-            socket = io.connect('http://127.0.0.1:3001');
+            socket = io.connect(AirCADiaURI);
 
             socket.on('connect', function() {
                 socket.send('User has connected!');
@@ -125,12 +132,6 @@
     </script>
 
     <script>
-        //var AirCADiaProjectsURI = "http://127.0.0.1:3000/get-projects";
-        var AirCADiaProjectsURI = "http://aircadia.azurewebsites.net/get-projects";
-
-
-
-
         var nodeArraye = [];
         var linkArraye = [];
 
