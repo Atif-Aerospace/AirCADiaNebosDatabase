@@ -10,7 +10,7 @@
 
     initialise() {
         this.ProjectName = "Test1";
-        this.endPoint = 'http://127.0.0.1:3002/';
+        this.endPoint = AirCADiaProject;
 
         //this.data.push({ "name": "x1", 'category': 'system.wing.span', 'description': 'Wing span of the aircraft', "type": "Double", "value": 2, "unit": "[ft]", "minValue": 0, "maxValue": 100 });
         //this.data.push({ "name": "x2", 'category': 'system.wing.area', 'description': 'Wing area of the aircraft', "type": "Double", "value": 5, "unit": "[ft2]", "minValue": 0, "maxValue": 100 });
