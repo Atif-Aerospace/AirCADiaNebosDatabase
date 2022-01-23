@@ -61,12 +61,13 @@
     <div id="myDiagramDiv" style="width:1500px; height:850px; background-color: #DAE4E4;"></div>
 
     <script>
-        //var AirCADiaProjectsURI = "http://127.0.0.1:3000/get-projects";
-        var AirCADiaProjectsURI = "http://aircadia.azurewebsites.net/get-projects";
-
         //var AirCADiaURI = 'http://127.0.0.1:3001';
-        var AirCADiaURI = 'http://aircadia.azurewebsites.net';
+        var AirCADiaURI = 'http://aircadia.azurewebsites.net/';
+
+        //var AirCADiaProject = 'http://127.0.0.1:3002/';
+        var AirCADiaProject = 'http://windturbine.azurewebsites.net/';
     </script>
+
     <script>
         var socket;
         $(document).ready(function() {
@@ -995,8 +996,7 @@
 
         // call the web service for creating data
         async function UpdateProjects() {
-            //let uri = nebosProject.endPoint.concat('get-projects');
-            let uri = AirCADiaProjectsURI;
+            let uri = AirCADiaURI.concat('get-projects');
 
             // #region execution
             let response = await fetch(uri, {
