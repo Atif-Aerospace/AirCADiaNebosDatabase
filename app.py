@@ -195,4 +195,4 @@ def handle_create_workflow(json):
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, port=3001)
+    socketio.run(app, debug=True)
