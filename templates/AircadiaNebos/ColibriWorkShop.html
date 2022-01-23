@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Colibri Workshop</title>
+
+    <link rel="stylesheet" href="../codebase/webix.css" type="text/css" charset="utf-8">
+    <link href="../codebase/skins/mini.css" rel="stylesheet" type="text/css">
+    <script src="../codebase/webix.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            /*margin: 20px;*/
+            /*background: #f0e68c;*/
+        }
+
+        .aircadia_text1 > .webix_el_box {
+            font-size: 22px;
+            /*
+            font-style: italic;
+            color: #ffd800;
+            background-color: #000000;
+            */
+        }
+
+        .aircadia_text2 > .webix_el_box {
+            font-size: 16px;
+            /*
+            font-style: italic;
+            color: #ffd800;
+            background-color: #000000;
+            */
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="layout_div" class="container">
+        <!--<input type="file" onchange="loadFile()" />-->
+    </div>
+
+    <script>
+
+
+        let myParameters = [
+            { id: 1, category: "System.Wing.Span", name: "WingArea", value: 3, description: "Wing area", rank: 1 },
+            { id: 2, category: "System.Wing.Area", name: "WingAspectRatio", value: 4, description: "Wing aspect ratio", rank: 2 },
+            { id: 3, category: "System.Wing.Weight", name: "WingSweep25", value: 0.0, description: "Wing sweep at quarter chord", rank: 3 },
+
+            { id: 1, category: "System.Wing.Span", name: "Range", value: 3, description: "Aircraft range", rank: 1 },
+            { id: 1, category: "System.Wing.Span", name: "TOFL", value: 3, description: "Aircraft takeoff field length", rank: 1 },
+            { id: 1, category: "System.Wing.Span", name: "LFL", value: 3, description: "Aircraft landing field length", rank: 1 },
+            { id: 1, category: "System.Wing.Span", name: "ApproachSpeed", value: 3, description: "Aircraft approach speed", rank: 1 },
+            { id: 1, category: "System.Wing.Span", name: "WingArea", value: 3, description: "Wing area", rank: 1 },
+            { id: 1, category: "System.Wing.Span", name: "WingArea", value: 3, description: "Wing area", rank: 1 },
+        ]
+
+        //===============================//
+        //==========Left Region==========//
+        //===============================//
+
+        var ttt = {
+            // container:"box",
+            view: "tree",
+            id: "ProjectExplorerTree",
+            width: 200,
+            scroll: "auto",
+            data:
+                [
+                    {
+                        id: "root", value: "Aircraft", open: true, data: [
+                            {
+                                id: "WingTreeNode", open: true, value: "Wing", data: []
+                            },
+                            {
+                                id: "FuselageTreeNode", open: true, value: "Fuselage", data: []
+                            },
+                            {
+                                id: "StabiliserTreeNode", open: true, value: "Stabiliser", data: []
+                            },
+                            {
+                                id: "FinTreeNode", open: true, value: "Fin", data: []
+                            },
+                            {
+                                id: "PowerplantTreeNode", open: true, value: "Powerplant", data: []
+                            },
+                            {
+                                id: "NacelleTreeNode", open: true, value: "Nacelle", data: []
+                            }
+                        ]
+                    }
+                ]
+        }
+
+
+
+        //========================//
+        // #region Central Region //
+        //========================//
+
+        var cen = {
+            rows: [
+                {
+                    view: "tabview",
+                    id: "tabview1",
+                    animate: true,
+                    tabbar: {
+                        close: true,
+                        //popupWidth: 300,
+                        //tabMinWidth: 120,
+                        //optionWidth: 200,
+                        height: 30,
+                        //yCount: 10,
+                    },
+                    cells: [
+                        {
+                            header: "Welcome", width: 100,
+                            body: {
+                                view: "list",
+                                template: "#rank#. #title# <div style='padding-left:18px'> Year:#year#, votes:#votes# </div>",
+                                type: {
+                                    height: 60
+                                },
+                                select: true,
+                                //data: grid_data
+                            }
+                        }
+                    ]
+                },
+                {
+                    cols: [
+                        {
+                            view: "button", value: "Execute", click: ShowExecutionUI
+                        },
+                        {
+                            view: "button", value: "Add tab", click: executeModel
+                        },
+                        {
+                            view: "button", value: "Remove tab", click: function () {
+                                var multiview = $$("tabview1").getMultiview();
+                                if (multiview.getChildViews().length === 1) {
+                                    webix.message({ text: "Tabview & multiview have to contain at least one cell", type: "debug" })
+                                    return false
+                                }
+                                $$("tabview1").removeView($$("tabview1").getValue());
+                            }
+                        },
+                        { gravity: 2 }
+                    ]
+                }
+            ]
+        };
+
+        //#endregion
+
+        //================================//
+        //==========Right Region==========//
+        //================================//
+
+        //var ppp = {
+        //    view: "form",
+        //    id: 'propertiesform',
+        //    //height: 1200,
+        //    scroll: "auto",
+        //    width: 300,
+        //    //container: "testA",
+        //    elements: [{ template: "X-Axis", type: "section" },
+        //    { view: "text", label: "Title" },
+        //    {
+        //        view: "select", name: "xAxisSelect", value: 0, label: "Parameter", options: [
+        //            { value: "x1", id: 0 },
+        //            { value: "x2", id: 1 },
+        //            { value: "y1", id: 2 },
+        //            { value: "y2", id: 3 },
+        //            { value: "y3", id: 4 }
+        //        ]
+        //    },
+
+        //    { template: "Y-Axis", type: "section" },
+        //    { view: "text", label: "Title" },
+        //    {
+        //        view: "select", name: "yAxisSelect", value: 1, label: "Parameter", options: [
+        //            { value: "x1", id: 0 },
+        //            { value: "x2", id: 1 },
+        //            { value: "y1", id: 2 },
+        //            { value: "y2", id: 3 },
+        //            { value: "y3", id: 4 }
+        //        ]
+        //    },
+
+        //    {
+        //        margin: 5, cols: [
+        //            { view: "button", label: "Login", type: "form" },
+        //            { view: "button", label: "Cancel" }
+        //        ]
+        //    }]
+        //};
+        ppp = {
+            view: "property", id: "sets", width: 300,
+            elements: [
+                { label: "Transformation", type: "label" },
+                { label: "X", type: "text", id: "xLocation" },
+                { label: "Y", type: "text", id: "yLocation" },
+                { label: "Z", type: "text", id: "zLocation" },
+                { label: "Cross Section", type: "label" },
+                { label: "Data url", type: "text", id: "url" },
+                { label: "Data type", type: "select", options: ["json", "xml", "csv"], id: "type" },
+                { label: "Use JSONP", type: "checkbox", id: "jsonp" },
+                { label: "Planform", type: "label" },
+                { label: "Area", type: "text", id: "area" },
+                { label: "Aspect Ratio", type: "text", id: "aspectRatio" },
+                { label: "Sweep Angle", type: "text", id: "sweepAngle" },
+                { label: "Taper Ratio", type: "text", id: "taperRatio" },
+            ]
+        };
+
+        var mainInteface = webix.ui({
+            container: "layout_div", // corresponds to the id of the div block
+            rows: [
+                //xxx,
+                {
+                    cols: [
+                        ttt, //{ template: "col 1", width: 300 },
+                        { view: "resizer" },
+                        //{ template: "col 2", content: "content1" },
+                        cen,
+                        { view: "resizer" },
+                        ppp //{ template: "col 3", width: 300 }
+                    ]
+                },
+                { template: "Status Bar", height: 30 },
+            ]
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var grid_Execute =
+        {
+            id: "ExecutionUI",
+            cols: [
+                {
+                    id: "ExecutionTree",
+                    view: "tree",
+                    width: 200,
+                    select: true,
+                    data:
+                        [
+                            {
+                                id: "ExecutionTreeModelsNode", open: true, value: "Models", data: []
+                            },
+                            {
+                                id: "ExecutionTreeWorkflowsNode", open: true, value: "Workflows", data: [
+                                    { id: "3.1", value: "Workflow 1" },
+                                    { id: "3.2", value: "Workflow 2" }
+                                ]
+                            },
+                            {
+                                id: "ExecutionTreeStudiesNode", open: true, value: "Studies", data: [
+                                    { id: "4.1", value: "Study 1" },
+                                    { id: "4.2", value: "Study 2" }
+                                ]
+                            }
+                        ]
+                },
+
+                { view: "resizer" },
+                {
+                    rows: [
+                        {
+                            id: "executionTable",
+                            view: "datatable",
+                            editable: true,
+                            //autowidth: true,
+                            //autoheight: true,
+                            columns: [
+                                { id: "rank", header: "Rank", css: "rank", width: 50 },
+                                { id: "category", header: "Category", width: 200 },
+                                { id: "name", header: "Name", width: 200 },
+                                { id: "value", header: "Value", width: 80, editor: "text" },
+                                { id: "description", header: "Description", width: 100, minwidth: 100, fillspace: 1 }
+                            ],
+                            //autoheight: true,
+                            //autowidth: true,
+                            scroll: "auto",
+                            data: [
+                                { id: 1, category: "System.Wing.Span", name: "X1", value: 3, description: "Wing Span", rank: 1 },
+                                { id: 2, category: "System.Wing.Area", name: "X2", value: 4, description: "Wing Area", rank: 2 },
+                                { id: 3, category: "System.Wing.Weight", name: "Y", value: 0.0, description: "Wing Weight", rank: 3 }
+                            ]
+                        },
+                        {
+                            view: "button", value: "Execute", click: executeModel
+                        }
+                    ]
+                }
+            ]
+        }
+
+        function ShowExecutionUI() {
+            $$("tabview1").addView({
+                header: "Execution", width: 100,
+                body: grid_Execute
+                //body: {
+                //    id: "executionUI",
+                //    view: "scrollview",
+                //    scroll: "auto",
+                //    body: grid_Execute
+                //}
+            });
+
+            // Update nodes for tree
+            let modelsNodeId = $$("ExecutionTree").getItem('ExecutionTreeModelsNode').id;
+            let model;
+            for (let i = 0; i < nebosProject.models.length; i++) {
+                model = nebosProject.models[i];
+                $$("ExecutionTree").add({ id: "ExecutionTreeModelsNode_" + model.name, value: model.name }, -1, modelsNodeId);
+            }
+
+            $$("ExecutionUI").show();
+
+            $$("ExecutionTree").attachEvent("onItemClick", treeViewExecution_ItemClick);
+
+
+        }
+
+
+
+
+
+
+        async function executeModel() {
+            let selectedExecutableTreeItem = $$("ExecutionTree").getSelectedItem();
+            var parentId = selectedExecutableTreeItem.$parent;
+            let parentNode = $$("ExecutionTree").getItem(parentId);
+
+            if (parentNode.value == "Models") {
+                let model = nebosProject.getModel(selectedExecutableTreeItem.value);
+
+                // #region inputs
+                // prepare request json data
+                var jData = {};
+                jData.name = model.name;
+                jData.inputs = [];
+                for (let i = 0; i < model.inputs.length; i++) {
+                    let dataName = model.inputs[i].name;
+                    var gridRecord = $$("executionTable").getItem($$("executionTable").getIdByIndex(i));
+                    jData.inputs.push({ name: dataName, value: gridRecord.value });
+                }
+                jData.outputs = [];
+                for (let i = 0; i < model.outputs.length; i++) {
+                    let dataName = model.outputs[i].name;
+                    jData.outputs.push({ name: dataName, value: 0 });
+                }
+                // #endregion
+
+                let poni = JSON.stringify(jData);
+
+                // #region execution
+                let response = await fetch(model.endPoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(jData)
+                });
+                let result = await response.json();
+                // #endregion
+
+                // #region outputs
+                for (let i = 0; i < model.outputs.length; i++) {
+                    let row_id = $$("executionTable").getIdByIndex(i + model.inputs.length)
+                    $$("executionTable").updateItem(row_id, { value: result.outputs[i].value });
+                }
+                // #endregion
+
+            }
+        }
+
+    </script>
+    
+</body >
+</html >
